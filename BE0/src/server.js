@@ -1,26 +1,20 @@
+require("dotenv").config();
 const express = require("express");
 const path = require("path");
-const app = express(); //app express
-const port = 8081; //port
+const configViewEngine = require("./config/viewEngine");
+const webRoutes = require("./routes/web");
 
-//confic template engine
-app.set("views", path.join(__dirname, "views"));
-app.set("view engine", "ejs");
+console.log(">>>check env: ", process.env);
+const app = express(); //app express
+const port = process.env.PORT || 8888; //port => hardcode .uat .prod
+const hostname = process.env.HOST_NAME;
+
+//config template engine
+configViewEngine(app);
 
 // khai ba'o route
-app.get("/", (req, res) => {
-  res.send("Hello World!");
-});
+app.use("/", webRoutes);
 
-app.get("/abc", (req, res) => {
-  res.send("check ABC");
-});
-
-app.get("/test", (req, res) => {
-  // res.send("<h1>Hello World!</h1>");
-  res.render("sample.ejs");
-});
-
-app.listen(port, () => {
+app.listen(port, hostname, () => {
   console.log(`Example app listening on port ${port}`);
 });
