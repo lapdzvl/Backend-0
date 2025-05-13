@@ -1,7 +1,9 @@
 const connection = require("../config/database");
+const { getAllUsers } = require("../services/CRUDService");
 
-const getHomepage = (req, res) => {
-  return res.render("home.ejs");
+const getHomepage = async (req, res) => {
+  let results = await getAllUsers();
+  return res.render("home.ejs", { listUsers: results });
 };
 
 const getABC = (req, res) => {
@@ -12,7 +14,7 @@ const getTest = (req, res) => {
   res.render("sample.ejs");
 };
 
-const postCreateuser = (req, res) => {
+const postCreateuser = async (req, res) => {
   let email = req.body.email;
   let name = req.body.name;
   let city = req.body.city;
@@ -23,15 +25,27 @@ const postCreateuser = (req, res) => {
   //   INSERT INTO Users (email, name, city)
   // VALUES('Thao@gmail.com', 'Tha', 'Thai Binh')
 
-  connection.query(
-    `INSERT INTO Users (email, name, city)
-  VALUES(?, ?, ?)`,
-    [email, name, city], // lay data do!ng
-    function (err, results) {
-      console.log(results);
-      res.send("create user succeed !");
-    }
+  // connection.query(
+  //   `INSERT INTO Users (email, name, city)
+  // VALUES(?, ?, ?)`,
+  //   [email, name, city], // lay data do!ng
+  //   function (err, results) {
+  //     console.log(results);
+  //     res.send("create user succeed !");
+  //   }
+  // );
+
+  let [results, fields] = await connection.query(
+    `INSERT INTO Users (email, name, city) VALUES(?, ?, ?)`,
+    [email, name, city] // lay data do!ng
   );
+
+  console.log("check: ", results);
+  res.send("Succeed New Users");
+};
+
+const getCreatePage = (req, res) => {
+  res.render("create.ejs");
 };
 
 module.exports = {
@@ -39,4 +53,5 @@ module.exports = {
   getABC,
   getTest,
   postCreateuser,
+  getCreatePage,
 };
