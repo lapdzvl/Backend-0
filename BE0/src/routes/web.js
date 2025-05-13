@@ -3,6 +3,7 @@ const {
   getHomepage,
   getABC,
   getTest,
+  postCreateuser,
 } = require("../controllers/homeController");
 
 const router = express.Router();
@@ -11,6 +12,8 @@ const router = express.Router();
 
 router.get("/", getHomepage);
 router.get("/abc", getABC);
-router.get("/test", getTest);
+router.get("/lap", getTest);
+
+router.post("/create-user", postCreateuser);
 
 module.exports = router;

@@ -10,6 +10,10 @@ const app = express(); //app express
 const port = process.env.PORT || 8888; //port => hardcode .uat .prod
 const hostname = process.env.HOST_NAME;
 
+//config req.body, la'y du lieu tu client
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
 //config template engine
 configViewEngine(app);
 
