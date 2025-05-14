@@ -1,5 +1,10 @@
 const connection = require("../config/database");
-const { getAllUsers, getUserById } = require("../services/CRUDService");
+const {
+  getAllUsers,
+  getUserById,
+  updateUserById,
+  deleteUserById,
+} = require("../services/CRUDService");
 
 const getHomepage = async (req, res) => {
   let results = await getAllUsers();
@@ -21,20 +26,6 @@ const postCreateuser = async (req, res) => {
 
   console.log("email: ", email, "name: ", name, "city: ", city);
 
-  // let {email, name, city} = req.body
-  //   INSERT INTO Users (email, name, city)
-  // VALUES('Thao@gmail.com', 'Tha', 'Thai Binh')
-
-  // connection.query(
-  //   `INSERT INTO Users (email, name, city)
-  // VALUES(?, ?, ?)`,
-  //   [email, name, city], // lay data do!ng
-  //   function (err, results) {
-  //     console.log(results);
-  //     res.send("create user succeed !");
-  //   }
-  // );
-
   let [results, fields] = await connection.query(
     `INSERT INTO Users (email, name, city) VALUES(?, ?, ?)`,
     [email, name, city] // lay data do!ng
@@ -54,6 +45,41 @@ const getUpdatePage = async (req, res) => {
   res.render("edit.ejs", { userEdit: user }); // x <- y , y gan gia tri cho x, gia tri bay gio la x
 };
 
+const postUpdateUser = async (req, res) => {
+  let email = req.body.email;
+  let name = req.body.name;
+  let city = req.body.city;
+  let userId = req.body.userId;
+
+  console.log(
+    "email: ",
+    email,
+    "name: ",
+    name,
+    "city: ",
+    city,
+    "userId: ",
+    userId
+  );
+
+  await updateUserById(email, city, name, userId);
+
+  // res.send("Updated Users Succeed");
+  res.redirect("/");
+};
+
+const postDeleteUser = async (req, res) => {
+  const userID = req.params.id;
+  let user = await getUserById(userID);
+  res.render("delete.ejs", { userEdit: user });
+};
+
+const postHandlerRemoveUser = async (req, res) => {
+  const id = req.body.userId;
+  await deleteUserById(id);
+  res.redirect("/");
+};
+
 module.exports = {
   getHomepage,
   getABC,
@@ -61,4 +87,7 @@ module.exports = {
   postCreateuser,
   getCreatePage,
   getUpdatePage,
+  postUpdateUser,
+  postDeleteUser,
+  postHandlerRemoveUser,
 };
