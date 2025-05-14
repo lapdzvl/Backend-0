@@ -30,6 +30,10 @@
       font-weight: 600;
       padding-bottom: 10px;
     }
+
+    .edittt {
+      text-decoration: none;
+    }
   </style>
   <body>
     <div class="topnav">
@@ -76,7 +80,7 @@
           <td><%= user.city %></td>
 
           <td>
-            <button>Edit</button>
+            <a class="edittt" href="/update/<%= user.id %>">Edit</a>
             <button>Delete</button>
           </td>
         </tr>
